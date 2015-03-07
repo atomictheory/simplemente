@@ -115,8 +115,20 @@ void main_old(int argc,char** argv)
 
 /////////////////////////////////////////////////////////////
 
+void quit_search_safe()
+{
+	quit_search=true;
+	while(!search_quitted)
+	{
+		Sleep(50);
+	}
+	quit_search=false;
+}
+
 void reset_game()
 {
+	quit_search_safe();
+
 	p.reset();
 	game_ptr=0;
 	analyze_mode=false;
@@ -126,16 +138,6 @@ void init_main()
 {
 	init_move_table();
 	reset_game();
-}
-
-void quit_search_safe()
-{
-	quit_search=true;
-	while(!search_quitted)
-	{
-		Sleep(50);
-	}
-	quit_search=false;
 }
 
 int search_depth;
@@ -184,18 +186,36 @@ void just_make_a_move()
 
 }
 
-void analyze_move(const char* usermove)
+void analyze_pos()
 {
 
 	do_make_move=false;
 
+	search_depth=10;
+	_beginthread(search_thread,0,&search_depth);
+}
+
+void analyze_move(const char* usermove)
+{
+
 	quit_search_safe();
 
-	search_depth=10;
 	if(p.is_algeb_move_legal((char*)usermove))
 	{
 		game[game_ptr++]=p;
 		p.make_move(p.try_move);
-		_beginthread(search_thread,0,&search_depth);
+		
+		analyze_pos();
 	}
+}
+
+void set_board(const char* fen)
+{
+
+	quit_search_safe();
+
+	game_ptr=0;
+	p.set_from_fen((char*)fen);
+
+	analyze_pos();
 }

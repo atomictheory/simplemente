@@ -935,7 +935,7 @@ bool ExecuteCommand (const char *verb, const char *rest)        // returns true 
         printf ("feature usermove=1\n");
         printf ("feature variants=\"normal,standard,atomic\"\n");
         printf ("feature colors=0\n");
-        printf ("feature setboard=0\n");
+        printf ("feature setboard=1\n");
         printf ("feature analyze=1\n");     // FIXFIXFIX:  Implement analyze command some day.
         printf ("feature debug=1\n");       // Not available in all WinBoard/xboard implementions: send debug prints only if we receive "accepted debug".
         printf ("feature memory=1\n");      // [16 September 2009]:  Adding support for the new "memory" command.
@@ -951,6 +951,7 @@ bool ExecuteCommand (const char *verb, const char *rest)        // returns true 
     } else if (0 == strcmp(verb,"new")) {
 		if(xboard_variant==VARIANT_ATOMIC)
 		{
+			analyze_mode=false;
 			reset_game();
 		}
 		else if(xboard_variant==VARIANT_STANDARD)
@@ -1058,7 +1059,15 @@ bool ExecuteCommand (const char *verb, const char *rest)        // returns true 
 			undo_move();
 		}
     } else if (0 == strcmp(verb,"setboard")) {
-        SetBoard (rest);
+		if(xboard_variant==VARIANT_STANDARD)
+		{
+			SetBoard (rest);
+		}
+		else if(xboard_variant==VARIANT_ATOMIC)
+		{
+			set_board(rest);
+		}
+        
     } else if (0 == strcmp(verb,"post")) {
         TheUserInterface.EnableThinkingDisplay (true);
     } else if (0 == strcmp(verb,"nopost")) {

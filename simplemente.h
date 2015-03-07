@@ -3,6 +3,7 @@
 #define SIMPLEMENTE_H
 #endif
 
+extern void set_board(const char*);
 extern void reset_game();
 extern void analyze_move(const char*);
 extern void analyze_and_make_move(const char*);
