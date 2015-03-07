@@ -1,0 +1,33 @@
+test:
+xboard 
+protover 2
+accepted myname
+accepted sigint
+accepted sigterm
+accepted ping
+accepted usermove
+accepted variants
+accepted colors
+accepted setboard
+accepted analyze
+accepted debug
+accepted memory
+accepted option
+accepted done
+force 
+ping 1
+memory 68
+new 
+random 
+variant atomic
+level 40 5 0
+post 
+hard 
+ping 2
+time 30000
+otim 30000
+usermove g1f3
+result * {xboard exit}
+force 
+ping 3
+quit 
