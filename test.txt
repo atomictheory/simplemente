@@ -26,8 +26,32 @@ hard
 ping 2
 time 30000
 otim 30000
-usermove g1f3
-result * {xboard exit}
+go 
+time 29211
+otim 29904
+usermove e7e6
 force 
 ping 3
+memory 68
+new 
+random 
+variant atomic
+level 40 5 0
+post 
+hard 
+ping 4
+force 
+analyze 
+. 
+usermove g1f3
+usermove f7f6
+undo 
+usermove e7e6
+undo 
+usermove e7e6
+undo 
+undo 
+usermove d2d4
+usermove e7e6
+exit 
 quit 

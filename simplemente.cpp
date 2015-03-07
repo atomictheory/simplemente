@@ -156,6 +156,34 @@ void analyze_and_make_move(const char* usermove)
 
 }
 
+void force()
+{
+	quit_search_safe();
+}
+
+void undo_move()
+{
+
+	quit_search_safe();
+
+	if(game_ptr-->0)
+	{
+		p=game[game_ptr];
+	}
+}
+
+void just_make_a_move()
+{
+
+	quit_search_safe();
+
+	do_make_move=true;
+
+	search_depth=6;
+	_beginthread(search_thread,0,&search_depth);
+
+}
+
 void analyze_move(const char* usermove)
 {
 

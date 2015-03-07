@@ -957,7 +957,13 @@ bool ExecuteCommand (const char *verb, const char *rest)        // returns true 
 		{
 			StartNewGame();
 		}
-	} else if (0 == strcmp(verb,"analyze")) {
+	}
+	else if (0 == strcmp(verb,"exit")) {
+
+        analyze_mode=false;
+
+    }
+	else if (0 == strcmp(verb,"analyze")) {
 
         analyze_mode=true;
 
@@ -1002,11 +1008,25 @@ bool ExecuteCommand (const char *verb, const char *rest)        // returns true 
         // Note that a single xchenard process never plays both sides simultaneously.
         // To play xchenard against itself, xboard will launch two xchenard.exe processes.
         // This constraint simplifies our pondering algorithm and allows certain assumptions to be made.
-        ComputerIsPlayingWhite = TheChessBoard.WhiteToMove();
-        ComputerIsPlayingBlack = TheChessBoard.BlackToMove();
+		if(xboard_variant==VARIANT_ATOMIC)
+		{
+			just_make_a_move();
+		}
+		else if(xboard_variant==VARIANT_STANDARD)
+		{
+			ComputerIsPlayingWhite = TheChessBoard.WhiteToMove();
+			ComputerIsPlayingBlack = TheChessBoard.BlackToMove();
+		}
     } else if (0 == strcmp(verb,"force")) {
         // xboard is telling us to stop thinking, and play neither side.
-        ReceiveForceCommand();
+		if(xboard_variant==VARIANT_ATOMIC)
+		{
+			force();
+		}
+		else if(xboard_variant==VARIANT_STANDARD)
+		{
+			ReceiveForceCommand();
+		}
     } else if (0 == strcmp(verb,"st")) {
         SetTimeCommand (rest);
     } else if (0 == strcmp(verb,"sd")) {
@@ -1018,10 +1038,25 @@ bool ExecuteCommand (const char *verb, const char *rest)        // returns true 
     } else if (0 == strcmp(verb,"ping")) {
         printf ("pong %s\n", rest);
     } else if (0 == strcmp(verb,"undo")) {
-        UndoMove();
+		if(xboard_variant==VARIANT_STANDARD)
+		{
+			UndoMove();
+		}
+		else if(xboard_variant==VARIANT_ATOMIC)
+		{
+			undo_move();
+		}
     } else if (0 == strcmp(verb,"remove")) {
-        UndoMove();
-        UndoMove();
+		if(xboard_variant==VARIANT_STANDARD)
+		{
+			UndoMove();
+			UndoMove();
+		}
+		else if(xboard_variant==VARIANT_ATOMIC)
+		{
+			undo_move();
+			undo_move();
+		}
     } else if (0 == strcmp(verb,"setboard")) {
         SetBoard (rest);
     } else if (0 == strcmp(verb,"post")) {
@@ -1113,7 +1148,6 @@ using namespace std;
 
 int main (int argc, const char *argv[])
 {
-
 
 	init_main();
 
