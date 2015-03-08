@@ -1,4 +1,5 @@
 #include "position.h"
+#include "simplemente.h"
 
 #include "xxhash.h"
 #include <iostream>
@@ -7,6 +8,11 @@
 #include <string>
 
 using namespace std;
+
+int randh()
+{
+	return rand() % 100;
+}
 
 bool quit_search;
 bool search_quitted=true;
@@ -983,13 +989,188 @@ int Position::calc_heuristic_value()
 		+
 		attacker_balance*ATTACKER_BONUS
 		+
-		rand()/50
+		randh()
 	;
 }
 
 time_t ltime0;
 time_t ltime;
 int nodes;
+int depth_reached;
+
+#ifdef QUIESCENCE_SEARCH
+int Position::search_recursive(Depth depth,Depth max_depth,int alpha,int beta,bool maximizing,string line)
+{
+	nodes++;
+
+	if(depth>depth_reached)
+	{
+		depth_reached=depth;
+		if(verbose)
+		{
+			//cout << "depth reached " << depth_reached << " at " << line << endl;
+		}
+	}
+
+	int value=maximizing?-INFINITE_SCORE:INFINITE_SCORE;
+
+	init_move_generator();
+
+	bool legal_move_found=false;
+	bool search_move_found=false;
+
+	if(next_legal_move())
+	{
+
+		legal_move_found=true;
+
+		do
+		{
+
+			bool is_capture=((try_move.info&CAPTURE)||(try_move.info&EP_CAPTURE));
+			bool is_legitimate_search_move=(is_capture||(depth<=max_depth));
+
+			if(is_legitimate_search_move)
+			{
+
+				search_move_found=true;
+
+				Position dummy=*this;
+
+				string old_line=line;
+				line+=try_move.algeb();
+				line+=" ";
+
+				dummy.make_move(try_move);
+
+				if(depth==0)
+				{
+					if(verbose&&(!quit_search))
+					{
+						cout << try_move.algeb() << " : ";
+					}
+				}
+
+				int eval=dummy.search_recursive(depth+1,max_depth,alpha,beta,!maximizing,line);
+
+				if(depth==0)
+				{
+					time( &ltime );int elapsed=(int)ltime-(int)ltime0;
+
+					int nps=elapsed==0?0:(int)(nodes/elapsed/1e3);
+
+					if(verbose&&(!quit_search))
+					{
+						cout 
+							<< "eval " << eval 
+							<< " nodes " << nodes 
+							<< " nps " << nps 
+							<< " kN/s reached " << depth_reached 
+							<< " rand " << randh()
+							<< endl;
+					}
+				}
+
+				line=old_line;
+
+				if(maximizing)
+				{
+					if(eval>value)
+					{
+
+						value=eval;
+
+						try_move.depth=depth;
+						try_move.value=value;
+						store_move(try_move);
+
+					}
+			
+					if(depth>=0)
+					{
+						if(value>alpha){alpha=value;}
+					}
+
+				}
+				else
+				{
+
+					if(eval<value)
+					{
+
+						value=eval;
+
+						try_move.depth=depth;
+						try_move.value=value;
+						store_move(try_move);
+			
+					}
+
+					if(depth>=0)
+					{
+						if(value<beta){beta=value;}
+					}
+
+				}
+
+				if(beta<alpha)
+				{
+					return value;
+				}
+
+				if(quit_search)
+				{
+					return value;
+				}
+
+			}
+
+		}while(next_legal_move());
+
+	}
+	
+	// end of recursive search
+
+	if(legal_move_found)
+	{
+
+		if(search_move_found)
+		{
+
+			return value;
+
+		}
+		else
+		{
+
+			return calc_heuristic_value();
+
+		}
+
+	}
+	else
+	{
+
+		if(is_in_check(turn))
+		{
+			if(turn==WHITE)
+			{
+				return -MATE_SCORE+depth;
+			}
+			else
+			{
+				return MATE_SCORE-depth;
+			}
+		}
+		else
+		{
+			return DRAW_SCORE;
+		}
+
+	}
+
+}
+#else
 int Position::search_recursive(Depth depth,Depth max_depth,int alpha,int beta,bool maximizing,string line)
 {
 	nodes++;
@@ -1113,6 +1294,7 @@ int Position::search_recursive(Depth depth,Depth max_depth,int alpha,int beta,bo
 
 	return value;
 }
+#endif
 
 int Position::search(Depth max_depth)
 {
@@ -1120,6 +1302,7 @@ int Position::search(Depth max_depth)
 	search_quitted=false;
 
 	nodes=0;
+	depth_reached=0;
 
 	time( &ltime0 );
 
@@ -1130,7 +1313,9 @@ int Position::search(Depth max_depth)
 	{
 		verbose=current_max_depth>=max_depth;
 
+		#ifdef XBOARD_COMPATIBLE
 		verbose=false;
+		#endif
 
 		value=search_recursive(0,current_max_depth,-INFINITE_SCORE,INFINITE_SCORE,turn==WHITE,"");
 		if(!quit_search)

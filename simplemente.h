@@ -3,6 +3,8 @@
 #define SIMPLEMENTE_H
 #endif
 
+//#define QUIESCENCE_SEARCH
+
 extern void set_board(const char*);
 extern void reset_game();
 extern void analyze_move(const char*);

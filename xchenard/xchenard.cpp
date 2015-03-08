@@ -1155,6 +1155,7 @@ void PlaySelf()
 #include <fstream>
 using namespace std;
 
+#ifdef XBOARD_COMPATIBLE
 int main (int argc, const char *argv[])
 {
 
@@ -1247,6 +1248,7 @@ int main (int argc, const char *argv[])
     XChenardCleanup();
     return 0;
 }
+#endif
 
 void ChessFatal ( const char *message )
 {

@@ -20,29 +20,21 @@ void search_thread(void* param)
 	p.search(*((int*)param));
 }
 
+#ifndef XBOARD_COMPATIBLE
 char buf[100];
-void main_old(int argc,char** argv)
+void main(int argc,char** argv)
 {
 
 	init_move_table();
 
 	p.reset();
-	//p.print();
-
-	ofstream outfile;
-	outfile.open("test.txt");
-	outfile << "test:" << endl;
-	outfile.close();
+	p.print();
 
 	do
 	{
 
 		cin.getline(buf,100);
-		outfile.open("test.txt",ios_base::app);
-		outfile << buf << endl;
-		outfile.close();
 		
-
 		if(buf[0]=='p')
 		{
 			p.print();
@@ -112,6 +104,7 @@ void main_old(int argc,char** argv)
 
 	}while(buf[0]!='x');
 }
+#endif
 
 /////////////////////////////////////////////////////////////
 

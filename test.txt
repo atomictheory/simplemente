@@ -25,70 +25,12 @@ post
 hard 
 ping 2
 force 
-memory 68
-new 
-random 
-variant atomic
-level 40 5 0
-post 
-hard 
-ping 3
-force 
-setboard rn1qkbnr/1ppb4/p3p3/3p1p1p/3PP3/N5PN/PPP2P1P/R1BQK2R w KQkq - 0 1
 analyze 
-. 
-usermove h3g5
-usermove g8f6
-usermove g5e6
-exit 
-memory 68
-new 
-random 
-variant atomic
-level 40 5 0
-post 
-hard 
-ping 4
-time 30000
-otim 30000
 usermove g1f3
-time 29657
-otim 29957
-usermove e2e3
-force 
-ping 5
-memory 68
-new 
-random 
-variant atomic
-level 40 5 0
-post 
-hard 
-ping 6
-force 
-memory 68
-new 
-random 
-variant atomic
-level 40 5 0
-post 
-hard 
-ping 7
-force 
-setboard rn1qkbnr/1ppb4/p3p3/3p1p1p/3PP3/N5PN/PPP2P1P/R1BQK2R w KQkq - 0 1
-analyze 
-usermove h3g5
-usermove d7a4
+. 
+usermove f7f6
+undo 
+usermove e7e6
+usermove f3e5
 exit 
-memory 68
-new 
-random 
-variant atomic
-level 40 5 0
-post 
-hard 
-ping 8
-result * {xboard exit}
-force 
-ping 9
 quit 
