@@ -1393,6 +1393,12 @@ int Position::count_pseudo_legal_moves()
 
 int Position::calc_mobility_balance()
 {
+
+	if(MOBILITY_BONUS==0)
+	{
+		return 0;
+	}
+
 	Position dummy=*this;
 
 	dummy.turn=TURN_WHITE;
@@ -1460,6 +1466,12 @@ int Position::attackers_on_king(Turn attacked_side)
 
 int Position::calc_attacker_balance()
 {
+
+	if(ATTACKER_BONUS==0)
+	{
+		return 0;
+	}
+
 	attacker_balance=-attackers_on_king(WHITE)+attackers_on_king(BLACK);
 
 	return attacker_balance;

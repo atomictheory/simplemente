@@ -143,20 +143,20 @@ extern int material_values[MAX_PIECE];
 ////////////////////////////////////////////////////////////////////
 // heuristic tuning
 
-#define ATTACKER_BONUS (10)
-#define MOBILITY_BONUS (10)
+#define ATTACKER_BONUS (45)
+#define MOBILITY_BONUS (15)
 
 #ifdef XBOARD_COMPATIBLE
 #define RANDOM_BONUS (100)
 #else
-#define RANDOM_BONUS (10)
+#define RANDOM_BONUS (15)
 #endif
 
-#define KNIGHT_VALUE (300)
-#define BISHOP_VALUE (300)
-#define ROOK_VALUE (500)
-#define QUEEN_VALUE (900)
-#define PAWN_VALUE (120)
+#define KNIGHT_VALUE (150)
+#define BISHOP_VALUE (150)
+#define ROOK_VALUE (300)
+#define QUEEN_VALUE (600)
+#define PAWN_VALUE (100)
 
 ////////////////////////////////////////////////////////////////////
 
