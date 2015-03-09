@@ -58,8 +58,8 @@ void add_nodes_thread(void* param)
 		}
 		else
 		{
-
-			quit_search=true;
+			cout << "warning : node generation failed" << endl;
+			Sleep(1000);
 
 		}
 

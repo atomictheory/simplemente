@@ -84,6 +84,7 @@ int alloc_new_position_table_entry(Position *p)
 	{
 
 		// move has not been evaluated yet
+		p->try_move.original_search_value=-INFINITE_SCORE;
 		p->try_move.value=-INFINITE_SCORE;
 		p->try_move.eval=-INFINITE_SCORE;
 
@@ -208,17 +209,19 @@ void list_move_values(Position* p)
 			<< ((i<9)?" ":"") << (i+1) << ". " 
 			<< m.algeb() 
 			<< " = " 
-			<< value_nice(m.eval)
-			//<< " ( orig " 
-			//<< value_nice(m.value)
-			//<< " ) "
+			<< value_nice(m.eval);
+
+		cout 
+			<< " ( orig " 
+			<< value_nice(m.original_search_value)
+			<< " ) "
 			;
 
 		Position dummy=*p;
 
 		dummy.make_move(m);
 
-		cout << (book_look_up_position(&dummy,DONT_CREATE)==NULL?"":" -->") << endl;
+		cout << (book_look_up_position(&dummy,DONT_CREATE)==NULL?"":"-->") << endl;
 
 	}
 
@@ -257,6 +260,8 @@ void search_move_values(Position* p)
 		{
 			cout << " = " << value << " ";
 		}
+
+		book_move_eval_table[entry->moves_ptr+i].original_search_value=value;
 
 		book_move_eval_table[entry->moves_ptr+i].value=value;
 		// sort is based on eval, so eval has to be set to search value

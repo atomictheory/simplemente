@@ -196,6 +196,7 @@ struct Move
 	Depth depth;
 	int value;
 
+	int original_search_value;
 	int eval;
 
 	char* algeb();
