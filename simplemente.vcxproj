@@ -79,6 +79,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="deep.cpp" />
     <ClCompile Include="position.cpp" />
     <ClCompile Include="simplemente.cpp" />
     <ClCompile Include="xboard.cpp" />
@@ -116,6 +117,7 @@
     <ClCompile Include="xxhash.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="deep.h" />
     <ClInclude Include="position.h" />
     <ClInclude Include="simplemente.h" />
     <ClInclude Include="xboard.h" />

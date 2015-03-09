@@ -3,6 +3,10 @@
 #define POSITION_H
 #endif
 
+#ifndef XBOARD_H
+#include "xboard.h"
+#endif
+
 #include <string>
 
 using namespace std;
@@ -114,6 +118,7 @@ typedef unsigned char Turn;
 typedef unsigned char CastlingRight;
 
 typedef unsigned char Depth;
+typedef unsigned char MoveCount;
 
 #define HASH_TABLE_SHIFT (21)
 #define HASH_TABLE_SIZE (1 << HASH_TABLE_SHIFT)
@@ -141,7 +146,13 @@ extern int material_values[MAX_PIECE];
 #define ATTACKER_BONUS (10)
 #define MOBILITY_BONUS (10)
 
-#define KNIGHT_VALUE (320)
+#ifdef XBOARD_COMPATIBLE
+#define RANDOM_BONUS (100)
+#else
+#define RANDOM_BONUS (10)
+#endif
+
+#define KNIGHT_VALUE (300)
 #define BISHOP_VALUE (300)
 #define ROOK_VALUE (500)
 #define QUEEN_VALUE (900)
@@ -185,6 +196,8 @@ struct Move
 	Depth depth;
 	int value;
 
+	int eval;
+
 	char* algeb();
 	void print();
 	bool mainly_equal_to(Move);
@@ -198,6 +211,8 @@ extern Move move_table[BOARD_SIZE*MAX_PIECE*MAX_LEGAL_MOVES_PER_SQUARE*2];
 extern void init_move_table();
 
 extern char* square_to_algeb(Square);
+
+extern bool force_non_verbose;
 
 struct Position
 {
@@ -276,6 +291,9 @@ struct Position
 	int heuristic_value;
 	int calc_heuristic_value();
 	////////////////////////////////////
+
+	void save();
+	void load();
 
 };
 

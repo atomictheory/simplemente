@@ -1,8 +1,11 @@
 #include "position.h"
 #include "simplemente.h"
 
+#include "xboard.h"
+
 #include "xxhash.h"
 #include <iostream>
+#include <fstream>
 #include <time.h>
 
 #include <string>
@@ -11,7 +14,7 @@ using namespace std;
 
 int randh()
 {
-	return rand() % 100;
+	return rand() % RANDOM_BONUS;
 }
 
 bool quit_search;
@@ -1037,9 +1040,11 @@ int Position::search_recursive(Depth depth,Depth max_depth,int alpha,int beta,bo
 
 				Position dummy=*this;
 
+				#ifdef CALC_LINE
 				string old_line=line;
 				line+=try_move.algeb();
 				line+=" ";
+				#endif
 
 				dummy.make_move(try_move);
 
@@ -1071,7 +1076,9 @@ int Position::search_recursive(Depth depth,Depth max_depth,int alpha,int beta,bo
 					}
 				}
 
+				#ifdef CALC_LINE
 				line=old_line;
+				#endif
 
 				if(maximizing)
 				{
@@ -1220,11 +1227,14 @@ int Position::search_recursive(Depth depth,Depth max_depth,int alpha,int beta,bo
 
 		if(depth==0)
 		{
+			#ifndef XBOARD_COMPATIBLE
 			if(verbose&&(!quit_search))
 			{
 				cout << try_move.algeb() << " : ";
 			}
+			#endif
 		}
+		
 
 		int eval=dummy.search_recursive(depth+1,max_depth,alpha,beta,!maximizing,line);
 
@@ -1234,10 +1244,12 @@ int Position::search_recursive(Depth depth,Depth max_depth,int alpha,int beta,bo
 
 			int nps=elapsed==0?0:(int)(nodes/elapsed/1e3);
 
+			#ifndef XBOARD_COMPATIBLE
 			if(verbose&&(!quit_search))
 			{
 				cout << "eval " << eval << " nodes " << nodes << " nps " << nps << " kNodes / sec " << endl;
 			}
+			#endif
 		}
 
 		//line=old_line;
@@ -1296,6 +1308,7 @@ int Position::search_recursive(Depth depth,Depth max_depth,int alpha,int beta,bo
 }
 #endif
 
+bool force_non_verbose=false;
 int Position::search(Depth max_depth)
 {
 
@@ -1317,6 +1330,8 @@ int Position::search(Depth max_depth)
 		verbose=false;
 		#endif
 
+		if(force_non_verbose){verbose=false;}
+
 		value=search_recursive(0,current_max_depth,-INFINITE_SCORE,INFINITE_SCORE,turn==WHITE,"");
 		if(!quit_search)
 		{
@@ -1332,8 +1347,12 @@ int Position::search(Depth max_depth)
 
 			int nps=elapsed==0?0:(int)(nodes/elapsed/1e3);
 
-			//cout << "max depth " << (int)max_depth << endl;
-			cout << current_max_depth << " " << value << " " << elapsed*100 << " " << nodes << " " << test.algeb() << endl;
+			if(!force_non_verbose)
+			{
+				//cout << "max depth " << (int)max_depth << endl;
+				cout << current_max_depth << " " << value << " " << elapsed*100 << " " << nodes << " " << test.algeb() << endl;
+			}
+
 		}
 	}
 
@@ -1657,4 +1676,18 @@ bool Position::is_in_check_square(Square sq,Turn side)
 	dummy.board[sq]=(side==WHITE?WHITE_PIECE|KING:BLACK_PIECE|KING);
 
 	return dummy.is_in_check(side);
+}
+
+void Position::save()
+{
+	ofstream o("pos.txt",ios::binary);
+	o.write((char*)this,sizeof(Position));
+	o.close();
+}
+
+void Position::load()
+{
+	ifstream i("pos.txt",ios::binary);
+	i.read((char*)this,sizeof(Position));
+	i.close();
 }

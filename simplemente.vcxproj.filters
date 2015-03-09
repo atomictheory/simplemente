@@ -123,6 +123,9 @@
     <ClCompile Include="xboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="deep.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="position.h">
@@ -156,6 +159,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="simplemente.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deep.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -24,6 +24,28 @@ level 40 5 0
 post 
 hard 
 ping 2
+time 30000
+otim 30000
+usermove g1f3
+time 29625
+otim 29240
+usermove f3g5
+time 29176
+otim 29037
+usermove g5f7
+time 28549
+otim 28954
+usermove g2g3
+force 
+ping 3
+memory 68
+new 
+random 
+variant atomic
+level 40 5 0
+post 
+hard 
+ping 4
 force 
 analyze 
 usermove g1f3
@@ -31,6 +53,21 @@ usermove g1f3
 usermove f7f6
 undo 
 usermove e7e6
-usermove f3e5
+undo 
+usermove f7f6
 exit 
+memory 68
+new 
+random 
+variant atomic
+level 40 5 0
+post 
+hard 
+ping 5
+time 30000
+otim 30000
+usermove g1f3
+result * {xboard exit}
+force 
+ping 6
 quit 
