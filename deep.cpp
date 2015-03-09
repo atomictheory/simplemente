@@ -209,15 +209,16 @@ void list_move_values(Position* p)
 			<< m.algeb() 
 			<< " = " 
 			<< value_nice(m.eval)
-			<< " ( orig " 
-			<< value_nice(m.value)
-			<< " ) ";
+			//<< " ( orig " 
+			//<< value_nice(m.value)
+			//<< " ) "
+			;
 
 		Position dummy=*p;
 
 		dummy.make_move(m);
 
-		cout << (book_look_up_position(&dummy,DONT_CREATE)==NULL?"":"-->") << endl;
+		cout << (book_look_up_position(&dummy,DONT_CREATE)==NULL?"":" -->") << endl;
 
 	}
 
