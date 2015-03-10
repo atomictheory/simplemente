@@ -69,6 +69,8 @@ void add_nodes_thread(void* param)
 
 #ifndef XBOARD_COMPATIBLE
 char buf[100];
+char startup_message[100]="";
+bool command_init=true;
 void main(int argc,char** argv)
 {
 
@@ -85,6 +87,17 @@ void main(int argc,char** argv)
 			p.print();
 
 			list_move_values(&p);
+
+			if(command_init)
+			{
+				command_init=false;
+				cout << "welcome to simplemente book builder, for instructions type help+ENTER" << endl << endl;
+			}
+			else if(startup_message[0])
+			{
+				cout << startup_message << endl << endl;
+				startup_message[0]=0;
+			}
 
 		}
 		
@@ -256,6 +269,10 @@ void quit_search_safe()
 		Sleep(50);
 	}
 	quit_search=false;
+
+	#ifndef XBOARD_COMPATIBLE
+	strcpy_s(startup_message,"search quitted");
+	#endif
 }
 
 void reset_game()
