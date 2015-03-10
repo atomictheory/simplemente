@@ -7,8 +7,8 @@
 #include "deep.h"
 #endif
 
+#ifndef MEMORY_H
+#include "memory.h"
+#endif
+
 extern void init_disk_hash();
-
-extern void create_data_directory();
-
-extern void save_position_to_disk_hash(Position*);

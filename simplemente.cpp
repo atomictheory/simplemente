@@ -12,6 +12,8 @@
 
 #include "diskhash.h"
 
+#include "memory.h"
+
 using namespace std;
 
 Position p;
@@ -25,7 +27,9 @@ void init_main()
 
 	init_book();
 
+	#ifdef ALLOW_DATA
 	init_disk_hash();
+	#endif
 
 	p.reset();
 
@@ -56,13 +60,6 @@ void add_nodes_thread(void* param)
 			cout << "pv " << calc_pv(&p) << endl << endl;
 
 			add_node_cnt++;
-
-			/*if((add_node_cnt%20)==0)
-			{
-				save_book();
-
-				book_size_info();
-			}*/
 
 		}
 		else
@@ -111,14 +108,15 @@ void main(int argc,char** argv)
 			else if(startup_message[0])
 			{
 				cout << startup_message << endl << endl;
-				startup_message[0]=0;
 			}
+
+			strcpy_s(startup_message,"unknown command");
 
 		}
 		
 		if(!dont_print_command_prompt)
 		{
-			cout << "type command > ";
+			cout << "( memory used " << (book_position_table_alloc_ptr-1) << " of " << BOOK_POSITION_TABLE_SIZE << " ) type command > ";
 		}
 		dont_print_command_prompt=false;
 
@@ -140,9 +138,12 @@ void main(int argc,char** argv)
 			cout << "m[algeb] : make move given in algebraic notation ( example 'me2e4' )" << endl;
 			cout << "u : unmake move" << endl;
 			cout << "p : save position to disk" << endl;
+			
 			cout << "o : load position from disk" << endl;
+			#ifdef ALLOW_SAVE
 			cout << "s : save book to disk" << endl;
 			cout << "h : load book from disk" << endl;
+			#endif
 			cout << "y : load position and book from disk" << endl;
 			cout << "v : search moves in position" << endl;
 			cout << "g[depth] : search to depth with alphabeta, depth= 1 .. 9" << endl;
@@ -163,6 +164,10 @@ void main(int argc,char** argv)
 			cin.getline(buf,100);
 		}
 
+		if(buf[0]==0)
+		{
+			startup_message[0]=0;
+		}
 
 		if(buf[0]=='p')
 		{
@@ -215,6 +220,7 @@ void main(int argc,char** argv)
 			strcpy_s(startup_message,"position resetted to starting position");
 		}
 
+		#ifdef ALLOW_SAVE
 		if(buf[0]=='s')
 		{
 			save_book();
@@ -228,6 +234,7 @@ void main(int argc,char** argv)
 			book_size_info();
 			strcpy_s(startup_message,"book loaded");
 		}
+		#endif
 
 		if(buf[0]=='f')
 		{

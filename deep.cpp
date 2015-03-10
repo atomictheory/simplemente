@@ -187,8 +187,10 @@ BookPositionTableEntry* book_look_up_position_in_memory(Position* p,bool create)
 BookPositionTableEntry* book_look_up_position(Position* p,bool create)
 {
 
+	#ifdef ALLOW_DATA
 	if(book_look_up_position_in_memory(p,DONT_CREATE)==NULL)
 	{
+
 
 		// not in memory, first look at disk
 
@@ -203,6 +205,7 @@ BookPositionTableEntry* book_look_up_position(Position* p,bool create)
 		}
 
 	}
+	#endif
 
 	// not on disk, fallback to original call
 
@@ -306,7 +309,9 @@ void search_move_values(Position* p)
 
 	entry->search_done=true;
 
+	#ifdef ALLOW_DATA
 	search_move_values_callback(p);
+	#endif
 
 }
 

@@ -7,6 +7,7 @@
 
 using namespace std;
 
+#ifdef ALLOW_DATA
 void create_data_directory()
 {
 
@@ -142,3 +143,4 @@ void search_move_values_callback(Position* p)
 	save_position_to_disk_hash(p);
 
 }
+#endif

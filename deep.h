@@ -7,11 +7,17 @@
 #include "position.h"
 #endif
 
-extern void search_move_values_callback(Position*);
+#ifndef MEMORY_H
+#include "memory.h"
+#endif
 
-#define MINIMAX_DEPTH (15)
-#define CALC_PV_DEPTH (15)
-#define MAX_LISTED_MOVES (35)
+#ifdef ALLOW_DATA
+extern void search_move_values_callback(Position*);
+#endif
+
+#define MINIMAX_DEPTH (20)
+#define CALC_PV_DEPTH (10)
+#define MAX_LISTED_MOVES (10)
 
 // percentage chance with which the best move is played
 // the higher the chance the deeper the search can go
@@ -32,7 +38,7 @@ extern void search_move_values_callback(Position*);
 #define BOOK_POSITION_HASH_MASK (BOOK_POSITION_HASH_SIZE - 1)
 #define BOOK_POSITION_HASH_LAST_INDEX BOOK_POSITION_HASH_MASK
 
-#define NO_OF_ENTRIES_BEHIND_HASH_KEY (2)
+#define NO_OF_ENTRIES_BEHIND_HASH_KEY (13)
 
 #define BOOK_POSITION_TABLE_SIZE (BOOK_POSITION_HASH_SIZE * NO_OF_ENTRIES_BEHIND_HASH_KEY)
 #define BOOK_POSITION_TABLE_LAST_INDEX (BOOK_POSITION_TABLE_SIZE - 1)

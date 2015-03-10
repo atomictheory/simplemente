@@ -120,6 +120,7 @@
   <ItemGroup>
     <ClInclude Include="deep.h" />
     <ClInclude Include="diskhash.h" />
+    <ClInclude Include="memory.h" />
     <ClInclude Include="position.h" />
     <ClInclude Include="simplemente.h" />
     <ClInclude Include="xboard.h" />
