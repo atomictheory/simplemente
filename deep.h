@@ -23,9 +23,9 @@ extern void minimax_out_and_sort(Position*);
 
 // percentage chance with which the best move is played
 // the higher the chance the deeper the search can go
-#define SEARCH_DEEPNESS (20)
+#define SEARCH_DEEPNESS (45)
 // increase this probability with depth
-#define DEPTH_BONUS (20)
+#define DEPTH_BONUS (15)
 // cutoff
 #define CUTOFF (MATE_SCORE - 100)
 
