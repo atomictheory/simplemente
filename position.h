@@ -13,6 +13,7 @@ using namespace std;
 
 extern bool quit_search;
 extern bool search_quitted;
+extern bool disable_search_quitted;
 extern bool do_make_move;
 
 //#define MY_DEBUG_POSITION_PRINT

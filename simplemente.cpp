@@ -26,6 +26,8 @@ void init_main()
 	p.reset();
 
 	reset_game();
+
+	disable_search_quitted=false;
 }
 
 void search_thread(void* param)
@@ -36,6 +38,9 @@ void search_thread(void* param)
 int add_node_cnt=0;
 void add_nodes_thread(void* param)
 {
+	// dont allow shallow search to report search quitted
+	disable_search_quitted=true;
+
 	search_quitted=false;
 	while(!quit_search)
 	{
@@ -65,6 +70,9 @@ void add_nodes_thread(void* param)
 
 	}
 	search_quitted=true;
+
+	// back to normal
+	disable_search_quitted=false;
 }
 
 #ifndef XBOARD_COMPATIBLE

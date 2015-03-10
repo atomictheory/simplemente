@@ -19,6 +19,7 @@ int randh()
 
 bool quit_search;
 bool search_quitted=true;
+bool disable_search_quitted=false;
 bool do_make_move=false;
 
 Move hash_table[HASH_TABLE_SIZE];
@@ -1362,7 +1363,11 @@ int Position::search(Depth max_depth)
 		make_move(test);
 	}
 
-	search_quitted=true;
+	if(!disable_search_quitted)
+	{
+		// in deep search reporting search quitted here is wrong, because the deep search loop has not ended yet
+		search_quitted=true;
+	}
 
 	return value;
 }
