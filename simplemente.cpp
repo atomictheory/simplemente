@@ -10,6 +10,8 @@
 
 #include "deep.h"
 
+#include "diskhash.h"
+
 using namespace std;
 
 Position p;
@@ -22,6 +24,8 @@ void init_main()
 	init_move_table();
 
 	init_book();
+
+	init_disk_hash();
 
 	p.reset();
 
@@ -53,12 +57,12 @@ void add_nodes_thread(void* param)
 
 			add_node_cnt++;
 
-			if((add_node_cnt%20)==0)
+			/*if((add_node_cnt%20)==0)
 			{
 				save_book();
 
 				book_size_info();
-			}
+			}*/
 
 		}
 		else

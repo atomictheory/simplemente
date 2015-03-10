@@ -126,6 +126,9 @@
     <ClCompile Include="deep.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="diskhash.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="position.h">
@@ -162,6 +165,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="deep.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="diskhash.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

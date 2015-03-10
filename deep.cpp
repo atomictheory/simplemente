@@ -15,7 +15,7 @@ int book_hash_table[BOOK_POSITION_HASH_SIZE];
 
 // hash table entry points here
 int book_position_table_alloc_ptr;
-BookPositionTableEntry book_position_table[BOOK_POSITION_HASH_SIZE];
+BookPositionTableEntry book_position_table[BOOK_POSITION_TABLE_SIZE];
 
 // position move points here
 int book_move_eval_table_alloc_ptr;
@@ -55,7 +55,7 @@ int alloc_new_position_table_entry(Position *p)
 
 	// ... or position memory
 
-	if(book_position_table_alloc_ptr>=BOOK_POSITION_HASH_LAST_INDEX)
+	if(book_position_table_alloc_ptr>=BOOK_POSITION_TABLE_LAST_INDEX)
 	{
 
 		// out of position memory
@@ -98,8 +98,9 @@ int alloc_new_position_table_entry(Position *p)
 
 }
 
-BookPositionTableEntry* book_look_up_position(Position* p,bool create)
+BookPositionTableEntry* book_look_up_position_in_memory(Position* p,bool create)
 {
+
 	PositionHashKey position_hash_key=calc_book_hash_key(p);
 
 	int entry_ptr=book_hash_table[position_hash_key];
@@ -180,6 +181,32 @@ BookPositionTableEntry* book_look_up_position(Position* p,bool create)
 		return entry;
 
 	}
+
+}
+
+BookPositionTableEntry* book_look_up_position(Position* p,bool create)
+{
+
+	if(book_look_up_position_in_memory(p,DONT_CREATE)==NULL)
+	{
+
+		// not in memory, first look at disk
+
+		BookPositionTableEntry* entry=book_look_up_position_callback(p);
+
+		if(entry!=NULL)
+		{
+
+			// found on disk and created in memory
+
+			return entry;
+		}
+
+	}
+
+	// not on disk, fallback to original call
+
+	return book_look_up_position_in_memory(p,create);
 
 }
 
@@ -279,12 +306,15 @@ void search_move_values(Position* p)
 
 	entry->search_done=true;
 
+	search_move_values_callback(p);
+
 }
 
 void book_size_info()
 {
 
 	cout << "position hash size " << BOOK_POSITION_HASH_SIZE << endl;
+	cout << "position table size " << BOOK_POSITION_TABLE_SIZE << endl;
 	cout << "number of positions " << (book_position_table_alloc_ptr-1) << endl;
 	cout << "move book size " << BOOK_MOVE_EVAL_TABLE_SIZE << endl;
 	cout << "number of moves " << book_move_eval_table_alloc_ptr << endl;

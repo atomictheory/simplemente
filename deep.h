@@ -7,6 +7,8 @@
 #include "position.h"
 #endif
 
+extern void search_move_values_callback(Position*);
+
 #define MINIMAX_DEPTH (15)
 #define CALC_PV_DEPTH (15)
 #define MAX_LISTED_MOVES (35)
@@ -24,13 +26,18 @@
 #define ESTIMATED_NUMBER_OF_LEGAL_MOVES_PER_POSITION (35)
 #define MAX_NUMBER_OF_LEGAL_MOVES_PER_POSITION (350)
 
-#define BOOK_HASH_SHIFT (14)
+#define BOOK_HASH_SHIFT (13)
 
 #define BOOK_POSITION_HASH_SIZE (1 << BOOK_HASH_SHIFT)
 #define BOOK_POSITION_HASH_MASK (BOOK_POSITION_HASH_SIZE - 1)
 #define BOOK_POSITION_HASH_LAST_INDEX BOOK_POSITION_HASH_MASK
 
-#define BOOK_MOVE_EVAL_TABLE_SIZE (BOOK_POSITION_HASH_SIZE * ESTIMATED_NUMBER_OF_LEGAL_MOVES_PER_POSITION)
+#define NO_OF_ENTRIES_BEHIND_HASH_KEY (2)
+
+#define BOOK_POSITION_TABLE_SIZE (BOOK_POSITION_HASH_SIZE * NO_OF_ENTRIES_BEHIND_HASH_KEY)
+#define BOOK_POSITION_TABLE_LAST_INDEX (BOOK_POSITION_TABLE_SIZE - 1)
+
+#define BOOK_MOVE_EVAL_TABLE_SIZE (BOOK_POSITION_TABLE_SIZE * ESTIMATED_NUMBER_OF_LEGAL_MOVES_PER_POSITION)
 #define BOOK_MOVE_EVAL_TABLE_LAST_INDEX (BOOK_MOVE_EVAL_TABLE_SIZE - 1)
 
 struct BookPositionTableEntry
@@ -46,6 +53,8 @@ struct BookPositionTableEntry
 	int moves_ptr;
 };
 
+extern BookPositionTableEntry* book_look_up_position_callback(Position*);
+
 // hash key points here
 extern int book_hash_table[BOOK_POSITION_HASH_SIZE];
 
@@ -53,7 +62,7 @@ extern int book_hash_table[BOOK_POSITION_HASH_SIZE];
 
 // hash table entry points here
 extern int book_position_table_alloc_ptr;
-extern BookPositionTableEntry book_position_table[BOOK_POSITION_HASH_SIZE];
+extern BookPositionTableEntry book_position_table[BOOK_POSITION_TABLE_SIZE];
 
 // position move points here
 extern int book_move_eval_table_alloc_ptr;
@@ -67,6 +76,7 @@ extern PositionHashKey calc_book_hash_key(Position*);
 
 #define DONT_CREATE false
 #define DO_CREATE true
+extern BookPositionTableEntry* book_look_up_position_in_memory(Position*,bool);
 extern BookPositionTableEntry* book_look_up_position(Position*,bool);
 
 extern void list_move_values(Position* p);
