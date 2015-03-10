@@ -79,12 +79,15 @@ void add_nodes_thread(void* param)
 char buf[100];
 char startup_message[100]="";
 bool command_init=true;
+bool dont_print_command_prompt=false;
 void main(int argc,char** argv)
 {
 
 	init_main();
 
 	search_quitted=true;
+
+	startup_message[0]=0;
 
 	do
 	{
@@ -109,8 +112,15 @@ void main(int argc,char** argv)
 
 		}
 		
+		if(!dont_print_command_prompt)
+		{
+			cout << "type command > ";
+		}
+		dont_print_command_prompt=false;
 
 		cin.getline(buf,100);
+
+		cout << endl;
 		
 		if(0==strcmp(buf,"help"))
 		{
@@ -135,41 +145,44 @@ void main(int argc,char** argv)
 			cout << "a : start deep analysis" << endl;
 			cout << "q : quit search or deep analysis" << endl;
 			cout << "i : minimax out book to current position" << endl;
+			cout << endl;
 			cout << "help : display this help" << endl;
+			cout << endl;
 			cout << "ENTER : print position" << endl;
-
+			cout << endl;
 			cout << "x : exit" << endl;
 
 			cout << endl;
 			cout << "press ENTER to continue" << endl;
+			cout << endl;
 
 			cin.getline(buf,100);
 		}
 
 
-		if(buf[0]=='r')
-		{
-			p.print();
-		}
-
 		if(buf[0]=='p')
 		{
 			p.save();
+			strcpy_s(startup_message,"position saved, to load back type o+ENTER");
 		}
 
 		if(buf[0]=='o')
 		{
 			p.load();
+			strcpy_s(startup_message,"position loaded");
 		}
 
 		if(buf[0]=='y')
 		{
 			load_book();
 			p.load();
+			strcpy_s(startup_message,"position and book loaded");
 		}
 
 		if(buf[0]=='v')
 		{
+			cout << endl;
+
 			search_move_values(&p);
 		}
 
@@ -177,33 +190,39 @@ void main(int argc,char** argv)
 		{
 			quit_search=false;
 			search_quitted=false;
+			cout << "deep analyis started";
+			cout << endl;
+			cout << endl;
 			_beginthread(add_nodes_thread,0,NULL);
+			dont_print_command_prompt=true;
 		}
 
 		if(buf[0]=='i')
 		{
 			minimax_out(&p);
+			strcpy_s(startup_message,"tree minimaxed out to current position");
 		}
 
 		if(buf[0]=='r')
 		{
 			p.reset();
-			p.print();
+			
 			game_ptr=0;
+			strcpy_s(startup_message,"position resetted to starting position");
 		}
 
 		if(buf[0]=='s')
 		{
 			save_book();
 			book_size_info();
-			cout << "book saved" << endl;
+			strcpy_s(startup_message,"book saved");
 		}
 
 		if(buf[0]=='h')
 		{
 			load_book();
 			book_size_info();
-			cout << "book loaded" << endl;
+			strcpy_s(startup_message,"book loaded");
 		}
 
 		if(buf[0]=='f')
@@ -214,8 +233,9 @@ void main(int argc,char** argv)
 			CloseClipboard();
 
 			p.set_from_fen(fen);
-			p.print();
 			game_ptr=0;
+
+			strcpy_s(startup_message,"position copied from clipboard");
 		}
 
 		if(buf[0]=='m')
@@ -224,11 +244,12 @@ void main(int argc,char** argv)
 			{
 				game[game_ptr++]=p;
 				p.make_move(p.try_move);
-				p.print();
+
+				strcpy_s(startup_message,"move made ok");
 			}
 			else
 			{
-				cout << "illegal move" << endl;
+				strcpy_s(startup_message,"illegal move");
 			}
 		}
 
@@ -237,7 +258,8 @@ void main(int argc,char** argv)
 			if(game_ptr-->0)
 			{
 				p=game[game_ptr];
-				p.print();
+
+				strcpy_s(startup_message,"move unmade");
 			}
 		}
 
@@ -250,6 +272,7 @@ void main(int argc,char** argv)
 				search_quitted=false;
 				quit_search=false;
 				_beginthread(search_thread,0,&search_depth);
+				dont_print_command_prompt=true;
 			}
 		}
 
@@ -260,7 +283,11 @@ void main(int argc,char** argv)
 
 		if(buf[0]=='l')
 		{
+			cout << endl;
+
 			p.list_legal_moves();
+
+			strcpy_s(startup_message,"listing legal moves complete");
 		}
 
 	}while(buf[0]!='x');

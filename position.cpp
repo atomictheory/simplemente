@@ -387,14 +387,14 @@ void Position::print()
 
 	cout << endl;
 	cout << endl;
-	cout << "turn " << (turn==WHITE?"white":"black") << endl;
+	cout << "turn " << (turn==WHITE?"white":"black") << " , ";
 	cout << "castling rights ["
 		<< (castling_rights&CASTLING_RIGHT_K?"K":"")
 		<< (castling_rights&CASTLING_RIGHT_Q?"Q":"")
 		<< (castling_rights&CASTLING_RIGHT_k?"k":"")
 		<< (castling_rights&CASTLING_RIGHT_q?"q":"")
 		<< (castling_rights==CASTLING_RIGHT_NONE?"-":"")
-	<< "]" << endl;
+	<< "]" << " , ";
 	cout << "ep square [" << square_to_algeb(ep_square) << "]" << endl;
 	//cout << "material balance " << calc_material_balance() << endl;
 	//cout << "mobility balance " << calc_mobility_balance() << endl;
@@ -597,10 +597,14 @@ void Position::list_legal_moves()
 	
 	init_move_generator();
 
+	int legal_move_count=0;
 	while(next_legal_move())
 	{
-		cout << try_move.algeb() << endl;
+		legal_move_count++;
+		cout << try_move.algeb() << " ";
 	}
+
+	cout << "( number of legal moves = " << legal_move_count << " ) " << endl;
 
 }
 

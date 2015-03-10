@@ -197,8 +197,8 @@ void list_move_values(Position* p)
 
 	sort_moves(p);
 
-	cout << "position found at " << (int)(entry-book_position_table) << endl;
-	cout << endl;
+	//cout << "position found at " << (int)(entry-book_position_table) << endl;
+	//cout << endl;
 	
 	for(int i=0;i<MIN(entry->no_moves,MAX_LISTED_MOVES);i++)
 	{
