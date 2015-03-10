@@ -8,10 +8,15 @@
 #endif
 
 #define MINIMAX_DEPTH (15)
+#define CALC_PV_DEPTH (15)
 
 // percentage chance with which the best move is played
 // the higher the chance the deeper the search can go
-#define SEARCH_DEEPNESS (40)
+#define SEARCH_DEEPNESS (60)
+// increase this probability with depth
+#define DEPTH_BONUS (10)
+// cutoff
+#define CUTOFF (MATE_SCORE - 100)
 
 #define MIN(A,B) (A<B?A:B)
 

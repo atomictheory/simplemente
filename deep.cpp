@@ -212,7 +212,7 @@ void list_move_values(Position* p)
 			<< value_nice(m.eval);
 
 		cout 
-			<< " ( orig " 
+			<< " ( " 
 			<< value_nice(m.original_search_value)
 			<< " ) "
 			;
@@ -221,7 +221,12 @@ void list_move_values(Position* p)
 
 		dummy.make_move(m);
 
-		cout << (book_look_up_position(&dummy,DONT_CREATE)==NULL?"":"-->") << endl;
+		if(book_look_up_position(&dummy,DONT_CREATE)!=NULL)
+		{
+			cout << "--> " << calc_pv(&dummy);
+		}
+
+		cout << endl;
 
 	}
 
@@ -427,6 +432,45 @@ void minimax_out(Position* p)
 
 }
 
+Move selected_move;
+Move* select_move_recursive(BookPositionTableEntry* entry,int move_index,int search_deepness)
+{
+
+	// out of moves
+	if(move_index>=entry->no_moves)
+	{
+		return NULL;
+	}
+
+	if(move_index>=(entry->no_moves-1))
+	{
+		// last move has to be selected with certainty
+		selected_move=book_move_eval_table[entry->moves_ptr+entry->no_moves-1];
+		return &selected_move;
+	}
+
+	if(abs(book_move_eval_table[entry->moves_ptr+move_index+1].eval)>CUTOFF)
+	{
+		// moves after this move are not worth trying
+		selected_move=book_move_eval_table[entry->moves_ptr+move_index];
+		return &selected_move;
+	}
+
+	if((entry->no_moves>move_index)&&((rand()%100)<search_deepness))
+	{
+
+		// select move with probability search deepness
+		selected_move=book_move_eval_table[entry->moves_ptr+move_index];
+		return &selected_move;
+
+	}
+
+	// select from remaining moves the same way
+
+	return select_move_recursive(entry,move_index+1,search_deepness);
+
+}
+
 int level;
 bool add_node_recursive(Position* p)
 {
@@ -452,43 +496,15 @@ bool add_node_recursive(Position* p)
 
 	sort_moves(p);
 	
-	Move m=book_move_eval_table[entry->moves_ptr];
+	int search_deepness=MIN(SEARCH_DEEPNESS+level*DEPTH_BONUS,100);
 
-	int search_deepness=MIN(SEARCH_DEEPNESS+level*10,100);
+	Move* m=select_move_recursive(entry,0,search_deepness);
 
-	if((entry->no_moves>1)&&((rand()%100)>search_deepness))
-	{
-
-		m=book_move_eval_table[entry->moves_ptr+1];
-
-		if((entry->no_moves>2)&&((rand()%100)>search_deepness))
-		{
-
-			m=book_move_eval_table[entry->moves_ptr+2];
-
-			if((entry->no_moves>3)&&((rand()%100)>search_deepness))
-			{
-
-				m=book_move_eval_table[entry->moves_ptr+3];
-
-				if((entry->no_moves>4)&&((rand()%100)>search_deepness))
-				{
-
-					m=book_move_eval_table[entry->moves_ptr+4];
-
-				}
-
-			}
-
-		}
-
-	}
-
-	cout <<  m.algeb() << " ";
+	cout << m->algeb() << " ";
 
 	Position dummy=*p;
 
-	dummy.make_move(m);
+	dummy.make_move(*m);
 
 	level++;
 	return add_node_recursive(&dummy);
@@ -515,9 +531,18 @@ bool add_node(Position* p)
 
 }
 
+int calc_pv_depth;
 char pv_puff[500];
 void calc_pv_recursive(Position* p)
 {
+
+	calc_pv_depth++;
+
+	if(calc_pv_depth>CALC_PV_DEPTH)
+	{
+		// to avoid infinite repetition
+		return;
+	}
 
 	BookPositionTableEntry* entry=book_look_up_position(p,DONT_CREATE);
 
@@ -560,6 +585,7 @@ char* calc_pv(Position* p)
 
 	pv_puff[0]=0;
 
+	calc_pv_depth=0;
 	calc_pv_recursive(p);
 
 	return pv_puff;
@@ -573,6 +599,10 @@ char* value_nice(int value)
 	if(value==-INFINITE_SCORE)
 	{
 		strcpy_s(value_nice_puff,"?");
+	}
+	else if(abs(value)>CUTOFF)
+	{
+		strcpy_s(value_nice_puff,value>0?"mate":"-mate");
 	}
 	else
 	{
