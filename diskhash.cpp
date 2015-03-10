@@ -40,7 +40,9 @@ void save_position_to_disk_hash(Position* p)
 	//cout << "saving position to " << disk_hash_file_name << endl;
 
 	ofstream o(disk_hash_file_name,ios::binary|ios::app);
+
 	o.write((char*)entry,sizeof(BookPositionTableEntry));
+
 	Move* moves_buffer=&book_move_eval_table[entry->moves_ptr];
 	int move_buffer_size=entry->no_moves*sizeof(Move);
 	
@@ -49,6 +51,7 @@ void save_position_to_disk_hash(Position* p)
 	//cout << "size of Move Buffer " << move_buffer_size << endl;
 
 	o.write((char*)moves_buffer,move_buffer_size);
+
 	o.close();
 
 }
@@ -77,62 +80,73 @@ BookPositionTableEntry* book_look_up_position_callback(Position* p)
 			// read in entry
 			i.read((char*)&entry_buffer,sizeof(BookPositionTableEntry));
 
-			int move_block_size=(sizeof(Move)*entry_buffer.no_moves);
-
-			//cout << "contains " << (int)entry_buffer.no_moves << " moves, move block size " << move_block_size << endl;
-
-			// read in moves
-			i.read((char*)&move_buffer,move_block_size);
-
-			if(0 == memcmp(entry_buffer.id,(char*)p,sizeof(PositionTrunk)))
+			if(!i.eof())
 			{
 
-				//cout << "matches searched position" << endl;
+				int move_block_size=(sizeof(Move)*entry_buffer.no_moves);
 
-				// we can only get here if position was not in memory, so we have to create it
-				BookPositionTableEntry* entry=book_look_up_position_in_memory(p,DO_CREATE);
+				//cout << "contains " << (int)entry_buffer.no_moves << " moves, move block size " << move_block_size << endl;
 
-				if(entry!=NULL)
+				// read in moves
+				i.read((char*)&move_buffer,move_block_size);
+
+				if(0 == memcmp(entry_buffer.id,(char*)p,sizeof(PositionTrunk)))
 				{
 
-					// there is room in memory to read in position from disk
+					//cout << "matches searched position" << endl;
 
-					// first save pointers because those on disk are corrupt
-					// other fields must be correct
-					int next_old=entry->next;
-					int moves_ptr_old=entry->moves_ptr;
+					// we can only get here if position was not in memory, so we have to create it
+					BookPositionTableEntry* entry=book_look_up_position_in_memory(p,DO_CREATE);
 
-					// now copy in entry from disk
-					memcpy(entry,&entry_buffer,sizeof(BookPositionTableEntry));
+					if(entry!=NULL)
+					{
 
-					// correct pointers
-					entry->next=next_old;
-					entry->moves_ptr=moves_ptr_old;
+						// there is room in memory to read in position from disk
 
-					// now copy in moves
-					Move* start_of_moves=&book_move_eval_table[moves_ptr_old];
+						// first save pointers because those on disk are corrupt
+						// other fields must be correct
+						int next_old=entry->next;
+						int moves_ptr_old=entry->moves_ptr;
 
-					memcpy(start_of_moves,&move_buffer,move_block_size);
+						// now copy in entry from disk
+						memcpy(entry,&entry_buffer,sizeof(BookPositionTableEntry));
 
-					// entry created
-					return entry;
+						// correct pointers
+						entry->next=next_old;
+						entry->moves_ptr=moves_ptr_old;
 
-				}
-				else
-				{
-					// out of memory
-					return NULL;
+						// now copy in moves
+						Move* start_of_moves=&book_move_eval_table[moves_ptr_old];
+
+						memcpy(start_of_moves,&move_buffer,move_block_size);
+
+						// entry created
+						i.close();
+						return entry;
+
+					}
+					else
+					{
+						// out of memory
+						return NULL;
+					}
+
 				}
 
 			}
 
-		}while(!i.end);
+		}while(!i.eof());
+
+		i.close();
 
 		return NULL;
+
 	}
 	else
 	{
+
 		return NULL;
+
 	}
 
 }
