@@ -147,7 +147,6 @@ void main(int argc,char** argv)
 			cout << "s : save book to disk" << endl;
 			cout << "h : load book from disk" << endl;
 			#endif
-			cout << "y : load position and book from disk" << endl;
 			cout << "v : search moves in position" << endl;
 			cout << "g[depth] : search to depth with alphabeta, depth= 1 .. 9" << endl;
 			cout << "a : start deep analysis" << endl;
@@ -182,13 +181,6 @@ void main(int argc,char** argv)
 		{
 			p.load();
 			strcpy_s(startup_message,"position loaded");
-		}
-
-		if(buf[0]=='y')
-		{
-			load_book();
-			p.load();
-			strcpy_s(startup_message,"position and book loaded");
 		}
 
 		if(buf[0]=='v')
