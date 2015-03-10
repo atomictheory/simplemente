@@ -15,6 +15,8 @@
 extern void search_move_values_callback(Position*);
 #endif
 
+extern void minimax_out_and_sort(Position*);
+
 #define MINIMAX_DEPTH (20)
 #define CALC_PV_DEPTH (10)
 #define MAX_LISTED_MOVES (10)

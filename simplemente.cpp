@@ -50,6 +50,7 @@ void add_nodes_thread(void* param)
 	disable_search_quitted=true;
 
 	search_quitted=false;
+
 	while(!quit_search)
 	{
 		if(add_node(&p))
@@ -89,6 +90,8 @@ void main(int argc,char** argv)
 	search_quitted=true;
 
 	startup_message[0]=0;
+
+	minimax_out_and_sort(&p);
 
 	do
 	{
@@ -208,7 +211,7 @@ void main(int argc,char** argv)
 
 		if(buf[0]=='i')
 		{
-			minimax_out(&p);
+			minimax_out_and_sort(&p);
 			strcpy_s(startup_message,"tree minimaxed out to current position");
 		}
 

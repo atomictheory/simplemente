@@ -10,6 +10,8 @@
 
 using namespace std;
 
+bool do_sort_at_minimax=false;
+
 // hash key points here
 int book_hash_table[BOOK_POSITION_HASH_SIZE];
 
@@ -440,7 +442,7 @@ int minimax_recursive(int depth,Position* p)
 		}
 		else
 		{
-			eval=book_move_eval_table[entry->moves_ptr+i].value;
+			eval=book_move_eval_table[entry->moves_ptr+i].original_search_value;
 			book_move_eval_table[entry->moves_ptr+i].eval=eval;
 
 		}
@@ -456,6 +458,11 @@ int minimax_recursive(int depth,Position* p)
 
 	}
 
+	if(do_sort_at_minimax)
+	{
+		sort_moves(p);
+	}
+
 	return value;
 
 }
@@ -465,6 +472,16 @@ void minimax_out(Position* p)
 
 	minimax_recursive(0,p);
 
+}
+
+void minimax_out_and_sort(Position* p)
+{
+	cout << "minimaxing tree, please wait" << endl;
+	do_sort_at_minimax=true;
+	minimax_out(p);
+	do_sort_at_minimax=false;
+	cout << "tree ready" << endl;
+	cout << endl;
 }
 
 Move selected_move;
@@ -549,7 +566,7 @@ bool add_node_recursive(Position* p)
 bool add_node(Position* p)
 {
 
-	minimax_out(p);
+	minimax_out_and_sort(p);
 
 	cout << "positions " << book_position_table_alloc_ptr << endl << endl << "examining ";
 
