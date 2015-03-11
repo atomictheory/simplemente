@@ -3,7 +3,7 @@
 #define XBOARD_H
 #endif
 
-#define XBOARD_COMPATIBLE
+//#define XBOARD_COMPATIBLE
 
 #define VARIANT_STANDARD 0
 #define VARIANT_ATOMIC 1
