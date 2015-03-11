@@ -12,6 +12,8 @@ using namespace std;
 
 bool do_sort_at_minimax=false;
 
+int minimax_counter;
+
 // hash key points here
 int book_hash_table[BOOK_POSITION_HASH_SIZE];
 
@@ -565,8 +567,12 @@ bool add_node_recursive(Position* p)
 
 bool add_node(Position* p)
 {
-
-	minimax_out(p);
+	if((minimax_counter++%MINIMAX_AFTER)==0)
+	{
+		cout << "minimaxing tree ";
+		minimax_out(p);
+		cout << endl << endl;
+	}
 
 	cout << "positions " << book_position_table_alloc_ptr << endl << endl << "examining ";
 

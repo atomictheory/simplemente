@@ -21,6 +21,10 @@ extern void minimax_out_and_sort(Position*);
 #define CALC_PV_DEPTH (10)
 #define MAX_LISTED_MOVES (10)
 
+#define MINIMAX_AFTER 20
+
+extern int minimax_counter;
+
 // percentage chance with which the best move is played
 // the higher the chance the deeper the search can go
 #define SEARCH_DEEPNESS (50)

@@ -51,6 +51,8 @@ void add_nodes_thread(void* param)
 
 	search_quitted=false;
 
+	minimax_counter=1;
+
 	while(!quit_search)
 	{
 		if(add_node(&p))
