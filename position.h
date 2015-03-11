@@ -144,7 +144,7 @@ extern int material_values[MAX_PIECE];
 ////////////////////////////////////////////////////////////////////
 // heuristic tuning
 
-#define ATTACKER_BONUS (45)
+/*#define ATTACKER_BONUS (45)
 #define MOBILITY_BONUS (15)
 
 #ifdef XBOARD_COMPATIBLE
@@ -157,7 +157,24 @@ extern int material_values[MAX_PIECE];
 #define BISHOP_VALUE (150)
 #define ROOK_VALUE (300)
 #define QUEEN_VALUE (600)
-#define PAWN_VALUE (100)
+#define PAWN_VALUE (100)*/
+
+// conventional set
+
+#define ATTACKER_BONUS (15)
+#define MOBILITY_BONUS (10)
+
+#ifdef XBOARD_COMPATIBLE
+#define RANDOM_BONUS (100)
+#else
+#define RANDOM_BONUS (5)
+#endif
+
+#define KNIGHT_VALUE (300)
+#define BISHOP_VALUE (300)
+#define ROOK_VALUE (500)
+#define QUEEN_VALUE (900)
+#define PAWN_VALUE (120)
 
 ////////////////////////////////////////////////////////////////////
 
