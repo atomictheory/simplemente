@@ -566,7 +566,7 @@ bool add_node_recursive(Position* p)
 bool add_node(Position* p)
 {
 
-	minimax_out_and_sort(p);
+	minimax_out(p);
 
 	cout << "positions " << book_position_table_alloc_ptr << endl << endl << "examining ";
 
@@ -620,6 +620,8 @@ void calc_pv_recursive(Position* p)
 	}
 	
 	Position dummy=*p;
+
+	sort_moves(p);
 
 	Move m=book_move_eval_table[entry->moves_ptr];
 
