@@ -5,6 +5,8 @@
 #include <iostream>
 #include <fstream>
 
+#include "xxhash.h"
+
 using namespace std;
 
 #ifdef ALLOW_DATA
@@ -22,6 +24,15 @@ void init_disk_hash()
 
 }
 
+PositionHashKey calc_disk_hash_key(Position* p)
+{
+	PositionHashKey disk_hash_key=(PositionHashKey)XXH32((void*)p,sizeof(PositionTrunk),0);
+
+	disk_hash_key&=DISK_POSITION_HASH_MASK;
+
+	return disk_hash_key;
+}
+
 char disk_hash_file_name[500];
 void save_position_to_disk_hash(Position* p)
 {
@@ -33,7 +44,7 @@ void save_position_to_disk_hash(Position* p)
 		return;
 	}
 
-	PositionHashKey key=calc_book_hash_key(p);
+	PositionHashKey key=calc_disk_hash_key(p);
 
 	sprintf_s(disk_hash_file_name,"Data/%d.smp",key);
 
@@ -59,7 +70,7 @@ void save_position_to_disk_hash(Position* p)
 BookPositionTableEntry* book_look_up_position_callback(Position* p)
 {
 
-	PositionHashKey key=calc_book_hash_key(p);
+	PositionHashKey key=calc_disk_hash_key(p);
 
 	sprintf_s(disk_hash_file_name,"Data/%d.smp",key);
 
@@ -158,3 +169,11 @@ void search_move_values_callback(Position* p)
 
 }
 #endif
+
+void disk_size_info()
+{
+
+	cout << "disk hash size " << DISK_POSITION_HASH_SIZE << endl;
+	cout << endl;
+
+}

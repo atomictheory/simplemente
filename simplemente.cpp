@@ -141,7 +141,6 @@ void main(int argc,char** argv)
 			cout << "m[algeb] : make move given in algebraic notation ( example 'me2e4' )" << endl;
 			cout << "u : unmake move" << endl;
 			cout << "p : save position to disk" << endl;
-			
 			cout << "o : load position from disk" << endl;
 			#ifdef ALLOW_SAVE
 			cout << "s : save book to disk" << endl;
@@ -152,6 +151,7 @@ void main(int argc,char** argv)
 			cout << "a : start deep analysis" << endl;
 			cout << "q : quit search or deep analysis" << endl;
 			cout << "i : minimax out book to current position" << endl;
+			cout << "y : book size info" << endl;
 			cout << endl;
 			cout << "help : display this help" << endl;
 			cout << endl;
@@ -169,6 +169,14 @@ void main(int argc,char** argv)
 		if(buf[0]==0)
 		{
 			startup_message[0]=0;
+		}
+
+		if(buf[0]=='y')
+		{
+
+			disk_size_info();
+			book_size_info();
+			
 		}
 
 		if(buf[0]=='p')

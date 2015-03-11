@@ -321,6 +321,7 @@ void book_size_info()
 {
 
 	cout << "position hash size " << BOOK_POSITION_HASH_SIZE << endl;
+	cout << endl;
 	cout << "position table size " << BOOK_POSITION_TABLE_SIZE << endl;
 	cout << "number of positions " << (book_position_table_alloc_ptr-1) << endl;
 	cout << "move book size " << BOOK_MOVE_EVAL_TABLE_SIZE << endl;
@@ -329,7 +330,6 @@ void book_size_info()
 	//cout << "position book size " << sizeof(book_position_table) << endl;
 	//cout << "move size " << sizeof(Move) << endl;
 	//cout << "move book size " << sizeof(book_move_eval_table) << endl;
-	cout << "number of moves " << book_move_eval_table_alloc_ptr << endl;
 	cout << endl;
 }
 

@@ -23,9 +23,9 @@ extern void minimax_out_and_sort(Position*);
 
 // percentage chance with which the best move is played
 // the higher the chance the deeper the search can go
-#define SEARCH_DEEPNESS (45)
+#define SEARCH_DEEPNESS (50)
 // increase this probability with depth
-#define DEPTH_BONUS (15)
+#define DEPTH_BONUS (10)
 // cutoff
 #define CUTOFF (MATE_SCORE - 100)
 
@@ -34,15 +34,13 @@ extern void minimax_out_and_sort(Position*);
 #define ESTIMATED_NUMBER_OF_LEGAL_MOVES_PER_POSITION (35)
 #define MAX_NUMBER_OF_LEGAL_MOVES_PER_POSITION (350)
 
-#define BOOK_HASH_SHIFT (13)
+#define BOOK_HASH_SHIFT (17)
 
 #define BOOK_POSITION_HASH_SIZE (1 << BOOK_HASH_SHIFT)
 #define BOOK_POSITION_HASH_MASK (BOOK_POSITION_HASH_SIZE - 1)
 #define BOOK_POSITION_HASH_LAST_INDEX BOOK_POSITION_HASH_MASK
 
-#define NO_OF_ENTRIES_BEHIND_HASH_KEY (13)
-
-#define BOOK_POSITION_TABLE_SIZE (BOOK_POSITION_HASH_SIZE * NO_OF_ENTRIES_BEHIND_HASH_KEY)
+#define BOOK_POSITION_TABLE_SIZE (BOOK_POSITION_HASH_SIZE)
 #define BOOK_POSITION_TABLE_LAST_INDEX (BOOK_POSITION_TABLE_SIZE - 1)
 
 #define BOOK_MOVE_EVAL_TABLE_SIZE (BOOK_POSITION_TABLE_SIZE * ESTIMATED_NUMBER_OF_LEGAL_MOVES_PER_POSITION)

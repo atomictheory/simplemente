@@ -1,4 +1,4 @@
-﻿Build started 2015.03.11. 0:37:09.
+﻿Build started 2015.03.11. 8:20:39.
      1>Project "C:\Unzip\MinGW\Stockfish-master\simplemente\simplemente\simplemente.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt deep.cpp diskhash.cpp simplemente.cpp
@@ -50,4 +50,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:04.43
+Time Elapsed 00:00:03.99
