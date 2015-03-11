@@ -27,6 +27,9 @@ ping 2
 time 30000
 otim 30000
 usermove g1f3
+time 29622
+otim 29790
+usermove e2e3
 result * {xboard exit}
 force 
 ping 3
